@@ -9,6 +9,7 @@ import Register from "./Pages/Register";
 function App() {
   const [user, setUser] = useState(null);
   const [users, setUsers] = useState([]);
+  const [ingreso, setIngreso] = useState({});
 
   useEffect(() => {
     const getUsersLocalStorage = () => {
@@ -16,9 +17,7 @@ function App() {
       setUsers(usersLS);
     };
     getUsersLocalStorage();
-  }, []);
-
-  console.log(users);
+  }, []); 
 
   useEffect(() => {
     localStorage.setItem("users", JSON.stringify(users));
@@ -40,7 +39,7 @@ function App() {
         {!user && (
           <Route
             path="/auth"
-            element={<Auth autenticar={() => setUser(true)} />}
+            element={<Auth users={users} autenticar={() => setUser(true)} />}
           />
         )}
         {user && (
