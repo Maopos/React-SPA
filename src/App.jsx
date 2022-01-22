@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
+import Header from "./components/Header";
 import Auth from "./Pages/Auth";
 import Dashboard from "./Pages/Dashboard";
 import Profile from "./Pages/Profile";
@@ -17,6 +18,8 @@ function App() {
     getUsersLocalStorage();
   }, []);
 
+  console.log(users);
+
   useEffect(() => {
     localStorage.setItem("users", JSON.stringify(users));
   }, [users]);
@@ -31,28 +34,31 @@ function App() {
   }, [user]);
 
   return (
-    <Routes>
-      {!user && (
-        <Route
-          path="/auth"
-          element={<Auth autenticar={() => setUser(true)} />}
-        />
-      )}
-      {user && (
-        <>
+    <div>
+      <Header logout={() => setUser(false)} user={user} />
+      <Routes>
+        {!user && (
           <Route
-            path="/profile"
-            element={<Profile logout={() => setUser(false)} />}
+            path="/auth"
+            element={<Auth autenticar={() => setUser(true)} />}
           />
-          <Route path="/dashboard" element={<Dashboard />} />
-        </>
-      )}
-      <Route
-        path="/register"
-        element={<Register users={users} setUsers={setUsers} />}
-      />
-      <Route path="*" element={<Navigate to={user ? "/profile" : "/auth"} />} />
-    </Routes>
+        )}
+        {user && (
+          <>
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+          </>
+        )}
+        <Route
+          path="/register"
+          element={<Register users={users} setUsers={setUsers} />}
+        />
+        <Route
+          path="*"
+          element={<Navigate to={user ? "/profile" : "/auth"} />}
+        />
+      </Routes>
+    </div>
   );
 }
 
